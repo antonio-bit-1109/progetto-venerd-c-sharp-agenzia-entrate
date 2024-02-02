@@ -566,6 +566,7 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
 
 
                     Console.WriteLine("REDDITO CALCOLATO CON SUCCESSO!");
+                    Thread.Sleep(1000);
                     Esci(contribuente);
 
                 }
