@@ -185,7 +185,7 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             Console.WriteLine("MESE DI NASCITA:");
             Console.WriteLine("\n");
             Console.WriteLine("inserisci il mese di nascita in formato numero: (1/12)");
-            Thread.Sleep(2000);
+
 
             try
             {
@@ -243,7 +243,7 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             Console.WriteLine("\n");
             Console.WriteLine("GIORNO DI NASCITA:");
             Console.WriteLine("\n");
-            Thread.Sleep(2000);
+
 
             try
             {
@@ -359,7 +359,7 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             Console.WriteLine("\n");
             Console.WriteLine("ANNO DI NASCITA:");
             Console.WriteLine("\n");
-            Thread.Sleep(2000);
+
             try
             {
                 Console.WriteLine("Inserisci l'anno di nascita: (yyyy)");
@@ -414,7 +414,7 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             Console.WriteLine("\n");
             Console.WriteLine("CODICE FISCALE:");
             Console.WriteLine("\n");
-            Thread.Sleep(2000);
+
             try
             {
                 Console.WriteLine("Inserisci il tuo codice fiscale: (16 caratteri)");
@@ -451,13 +451,13 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             Console.WriteLine("\n");
             Console.WriteLine("COMUNE DI RESIDENZA:");
             Console.WriteLine("\n");
-            Thread.Sleep(2000);
+
 
             Console.WriteLine("inserisci il tuo comune di residenza.");
             string comunediresidenza = Console.ReadLine();
 
             Console.WriteLine("finalizzazione...");
-            Thread.Sleep(2000);
+
             Console.WriteLine("comune di residenza salvato!");
             return contribuente.ComuneDiResidenza = comunediresidenza;
 
@@ -565,8 +565,7 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
                     Console.WriteLine($"Reddito Netto: {contribuente.redditoAnnualeNetto}\n");
 
 
-                    Console.WriteLine("REDDITO CALCOLATO CON SUCCESSO!");
-                    Thread.Sleep(1000);
+                    Console.ReadLine();
                     Esci(contribuente);
 
                 }
