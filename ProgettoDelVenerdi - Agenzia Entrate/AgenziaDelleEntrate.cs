@@ -26,13 +26,13 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
         inserisciSesso:
             Console.WriteLine("Inserisci il tuo sesso:  m/f");
             string sesso = Console.ReadLine().Trim();
-            if (sesso == "m")
+            if (sesso.ToLower() == "m")
             {
                 // salva true nel boolean del sesso
                 contribuente.IsContribuenteMale = true;
                 Console.WriteLine("Abbiamo salvato la tua scelta.");
             }
-            else if (sesso == "f")
+            else if (sesso.ToLower() == "f")
             {
                 // salva false nel boolean del sesso
                 contribuente.IsContribuenteMale = false;
@@ -50,9 +50,9 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             try
             {
                 int etaUtente = Convert.ToInt32(Console.ReadLine());
-                if (etaUtente <= 0)
+                if (etaUtente <= 0 || etaUtente > 99)
                 {
-                    Console.WriteLine("Input non valido. Riprova.");
+                    Console.WriteLine("Età inserita non Coerente. Riprova");
                     goto InserisciEta;
                 }
                 else if (etaUtente < 16)
@@ -84,39 +84,47 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
         {
             if (contribuente.IsContribuenteMale == true && contribuente.Eta > 35)
             {
+                Console.WriteLine("\n");
                 Console.WriteLine($"Benvenuto Nell'Agenzia delle Entrate Sig. {contribuente.Nome.ToUpper()} {contribuente.Cognome.ToUpper()}");
                 Menu(contribuente);
             }
             else if ((contribuente.IsContribuenteMale == true && contribuente.Eta < 35))
             {
+                Console.WriteLine("\n");
                 Console.WriteLine($"Benvenuta Nell'Agenzia delle Entrate Signorino {contribuente.Nome.ToUpper()} {contribuente.Cognome.ToUpper()}");
                 Menu(contribuente);
             }
             else if ((contribuente.IsContribuenteMale == false && contribuente.Eta > 35))
             {
+                Console.WriteLine("\n");
                 Console.WriteLine($"Benvenuto Nell'Agenzia delle Entrate Signora {contribuente.Nome.ToUpper()} {contribuente.Cognome.ToUpper()}");
                 Menu(contribuente);
             }
             else if ((contribuente.IsContribuenteMale == false && contribuente.Eta < 35))
             {
+                Console.WriteLine("\n");
                 Console.WriteLine($"Benvenuto Nell'Agenzia delle Entrate Signorina {contribuente.Nome.ToUpper()} {contribuente.Cognome.ToUpper()}");
                 Menu(contribuente);
             }
         }
 
         /*
-      * summary: menu iniziale, da qi partono le scelte dell utente sul cosa fare, continuare con la registrazione oppure uscire dal programma
+      * summary: menu iniziale, da qui partono le scelte dell utente sul cosa fare, continuare con la registrazione oppure uscire dal programma
       * parametri: viene passato l'intero oggetto contribuente 
       * return: void
       */
         public static void Menu(Contribuente contribuente)
         {
         RipetiMenu:
-            Console.WriteLine("=========================================");
+            Console.WriteLine("\n");
+            Console.WriteLine("=======================================");
+            Console.WriteLine("A G E N Z I A  D E L L E  E N T R A T E");
+            Console.WriteLine("=======================================");
             Console.WriteLine("Scegli cosa Fare:");
             Console.WriteLine("1- Registrati:");
             Console.WriteLine("2- Esci");
-            Console.WriteLine("=========================================");
+            Console.WriteLine("=======================================");
+            Console.WriteLine("\n");
 
             int scelta = Convert.ToInt32(Console.ReadLine());
             if (scelta == 1 || scelta == 2)
@@ -141,9 +149,9 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
 
 
         /*
-    * summary: 
-    * parametri:
-    * return: 
+    * summary: questo metodo raccoglia tutti gli altri metodi il cui scopo è acquisire, attravers unaserie di controlli, i dati dell'utente.
+    * parametri: contribuente
+    * return: void
     */
         public static void Registrati(Contribuente contribuente)
         {
@@ -155,11 +163,16 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             SetCodiceFiscale(contribuente);
             SetComunediResidenza(contribuente);
             SetRedditoAnnuale(contribuente);
-            CalcolotasseImposte(contribuente);
+            CalcoloRedditoAnnualeNetto(contribuente);
+            MostraRisultati(contribuente);
 
         }
 
-
+        /*
+* summary: in questo metodo viene impostato il mese di nascita dell'utente, acquisito come valore numerico e tramite uno switch trasformato in stringa
+* parametri: contribuente
+* return: string , viene ritornato il valore del mese di nascita a stringa, risultante dallo switch, e salvato come proprietà dell'oggetto. 
+*/
         public static string SetMesenascita(Contribuente contribuente)
         {
             Console.WriteLine("Attendere...");
@@ -168,6 +181,8 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
         // setto il mese: 
 
         SetDelMeseDINascita:
+            Console.WriteLine("\n");
+            Console.WriteLine("MESE DI NASCITA:");
             Console.WriteLine("inserisci il mese di nascita in formato numero: (1/12)");
             Thread.Sleep(2000);
 
@@ -213,102 +228,122 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             }
         }
 
-        public static string SetGiornoNascita(Contribuente contribuente)
+        /*
+* summary: in questo metodo viene impostato il giorno di nascita dell'utente, a seconda di qual'è il mese di nascita viene chiesto di inserire il giorno. Viene tenuto conto se il mese possiedde 28, 30 o 31 giorni.
+* parametri: contribuente
+* return: void
+*/
+        public static void SetGiornoNascita(Contribuente contribuente)
         {
             Console.WriteLine("Attendere...");
             Thread.Sleep(2000);
 
         SetDelGiornoDINascita:
 
+            try
+            {
+                if (contribuente.Mesenascita == "Febbraio")
+                {
+                    Console.WriteLine("inserisci il giorno di nascita in formato numero: (1/28)");
+                    Thread.Sleep(2000);
+                    int giornoDellaNascita = Convert.ToInt32(Console.ReadLine());
+                    try
+                    {
+                        if (giornoDellaNascita >= 1 && giornoDellaNascita <= 28)
+                        {
+                            Console.WriteLine("Giorno di nascita settato correttamente.");
+                            contribuente.Giornonascita = Convert.ToString(giornoDellaNascita);
+                        }
+                        else
+                        {
+                            Console.WriteLine("input non valido. Riprova");
+                            goto SetDelGiornoDINascita;
+                        }
+
+
+
+                    }
+                    catch
+                    {
+
+                        Console.WriteLine("input non valido. Riprova");
+                        goto SetDelGiornoDINascita;
+
+                    }
+                }
+                // mese da 30 giorni
+                else if (contribuente.Mesenascita == "Aprile" || contribuente.Mesenascita == "Giugno" || contribuente.Mesenascita == "Settembre" || contribuente.Mesenascita == "Novembre")
+                {
+                    Console.WriteLine("inserisci il giorno di nascita in formato numero: (1/30)");
+                    Thread.Sleep(2000);
+                    int giornoDellaNascita = Convert.ToInt32(Console.ReadLine());
+                    try
+                    {
+                        if (giornoDellaNascita >= 1 && giornoDellaNascita <= 30)
+                        {
+                            Console.WriteLine("Giorno di nascita settato correttamente.");
+                            contribuente.Giornonascita = Convert.ToString(giornoDellaNascita);
+                        }
+                        else
+                        {
+                            Console.WriteLine("input non valido. Riprova");
+                            goto SetDelGiornoDINascita;
+                        }
+
+
+                    }
+                    catch
+                    {
+
+                        Console.WriteLine("input non valido. Riprova");
+                        goto SetDelGiornoDINascita;
+
+                    }
+                }
+                // mese da 31 giorni
+                else
+                {
+                    Console.WriteLine("inserisci il giorno di nascita in formato numero: (1/31)");
+                    Thread.Sleep(2000);
+                    int giornoDellaNascita = Convert.ToInt32(Console.ReadLine());
+                    try
+                    {
+                        if (giornoDellaNascita >= 1 && giornoDellaNascita <= 31)
+                        {
+                            Console.WriteLine("Giorno di nascita settato correttamente.");
+                            contribuente.Giornonascita = Convert.ToString(giornoDellaNascita);
+                        }
+                        else
+                        {
+                            Console.WriteLine("input non valido. Riprova");
+                            goto SetDelGiornoDINascita;
+                        }
+
+                    }
+                    catch
+                    {
+
+                        Console.WriteLine("input non valido. Riprova");
+                        goto SetDelGiornoDINascita;
+
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("input non valido. Riprova");
+                goto SetDelGiornoDINascita;
+            }
             // se mese febbraio:
-            if (contribuente.Mesenascita == "Febbraio")
-            {
-                Console.WriteLine("inserisci il giorno di nascita in formato numero: (1/28)");
-                Thread.Sleep(2000);
-                int giornoDellaNascita = Convert.ToInt32(Console.ReadLine());
-                try
-                {
-                    if (giornoDellaNascita >= 1 && giornoDellaNascita <= 28)
-                    {
-                        Console.WriteLine("Giorno di nascita settato correttamente.");
-                        return contribuente.Giornonascita = Convert.ToString(giornoDellaNascita);
-                    }
-                    else
-                    {
-                        Console.WriteLine("input non valido. Riprova");
-                        goto SetDelGiornoDINascita;
-                    }
 
-
-
-                }
-                catch
-                {
-
-                    Console.WriteLine("input non valido. Riprova");
-                    goto SetDelGiornoDINascita;
-
-                }
-            }
-            // mese da 30 giorni
-            else if (contribuente.Mesenascita == "Aprile" || contribuente.Mesenascita == "Giugno" || contribuente.Mesenascita == "Settembre" || contribuente.Mesenascita == "Novembre")
-            {
-                Console.WriteLine("inserisci il giorno di nascita in formato numero: (1/30)");
-                Thread.Sleep(2000);
-                int giornoDellaNascita = Convert.ToInt32(Console.ReadLine());
-                try
-                {
-                    if (giornoDellaNascita >= 1 && giornoDellaNascita <= 30)
-                    {
-                        Console.WriteLine("Giorno di nascita settato correttamente.");
-                        return contribuente.Giornonascita = Convert.ToString(giornoDellaNascita);
-                    }
-                    else
-                    {
-                        Console.WriteLine("input non valido. Riprova");
-                        goto SetDelGiornoDINascita;
-                    }
-
-
-                }
-                catch
-                {
-
-                    Console.WriteLine("input non valido. Riprova");
-                    goto SetDelGiornoDINascita;
-
-                }
-            }
-            // mese da 31 giorni
-            else
-            {
-                Console.WriteLine("inserisci il giorno di nascita in formato numero: (1/31)");
-                Thread.Sleep(2000);
-                int giornoDellaNascita = Convert.ToInt32(Console.ReadLine());
-                try
-                {
-                    if (giornoDellaNascita >= 1 && giornoDellaNascita <= 31)
-                    {
-                        Console.WriteLine("Giorno di nascita settato correttamente.");
-                        return contribuente.Giornonascita = Convert.ToString(giornoDellaNascita);
-                    }
-                    else
-                    {
-                        Console.WriteLine("input non valido. Riprova");
-                        goto SetDelGiornoDINascita;
-                    }
-
-                }
-                catch
-                {
-
-                    Console.WriteLine("input non valido. Riprova");
-                    goto SetDelGiornoDINascita;
-
-                }
-            }
 
         }
+
+        /*
+* summary: in questo metodo viene impostato l'anno di nascita dell'utente, se non riesco a parsare il valore inserito dall utente in un intero significa che sono presenti caratteri letterari nell input e viene chiesto di riprovare.
+* parametri: contribuente
+* return: string, ritorno la stringa e la assegno alla prop dell'oggetto. "contribuente.AnnoNascita"
+*/
 
         public static string SetAnnoDinascita(Contribuente contribuente)
         {
@@ -340,16 +375,26 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
                 goto SetdelAnnoDinascita;
             }
         }
+        /*
+* summary: i valori giorno mese e anno di nascita vengono salvati come data di nascita completa.
+* parametri: contribuente
+* return: void
+*/
 
         public static void SetDataNascitaCompleta(Contribuente contribuente)
         {
             Console.WriteLine("\n");
             Console.WriteLine("Finalizzazione data di nascita...");
             contribuente.DataDinascitaCompleta = $"{contribuente.Giornonascita}-{contribuente.Mesenascita}-{contribuente.AnnoNascita}";
-            Console.WriteLine($" il contribuente {contribuente.Nome} {contribuente.Cognome} è nato in data {contribuente.DataDinascitaCompleta}");
+            Console.WriteLine($" il contribuente {contribuente.Nome.ToUpper()} {contribuente.Cognome.ToUpper()} è nato in data {contribuente.DataDinascitaCompleta.ToUpper()}");
 
         }
 
+        /*
+* summary: setting del codice fiscale. unico controllo, stringa di lunghezza 16 caratteri.
+* parametri: contribuente
+* return: void
+*/
         public static void SetCodiceFiscale(Contribuente contribuente)
         {
             Console.WriteLine("Attendere...");
@@ -378,6 +423,12 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             }
         }
 
+        /*
+* summary: setting del comune di residenza. 
+* parametri: contribuente
+* return: string 
+*/
+
         public static string SetComunediResidenza(Contribuente contribuente)
         {
             Console.WriteLine("Attendere...");
@@ -392,6 +443,11 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
 
         }
 
+        /*
+* summary: setting del reddito, se il valore fornito (inputreddito) viene parsato con successo in un doble viene effettuato il setting del reddito annuale del contribuente
+* parametri: contribuente
+* return: void 
+*/
         public static void SetRedditoAnnuale(Contribuente contribuente)
         {
             Console.WriteLine("Attendere...");
@@ -402,27 +458,30 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
         checkReddito:
             Console.WriteLine("Inserisci il tuo reddito annuale.");
 
-            // Leggi l'input dell'utente come stringa
             string inputReddito = Console.ReadLine();
 
-            // Verifica se l'input dell'utente è un numero
             if (double.TryParse(inputReddito, out redditoAnnuale))
             {
-                // Conversione riuscita, l'input è un numero
                 contribuente.RedditoAnnuale = redditoAnnuale;
                 Console.WriteLine("Reddito annuale inserito con successo.");
             }
             else
             {
-                // Conversione non riuscita, l'input non è un numero
                 Console.WriteLine("Input non valido. Devi inserire un numero per il reddito annuale.");
                 goto checkReddito;
             }
         }
 
-        public static void CalcolotasseImposte(Contribuente contribuente)
+        /*
+* summary: in base al reddito salvato (reddito lordo), viene calcolata l'imposta dovuta, vengono salvate nell'oggetto sia il reddito annuale netto che l'imposta dovuta.
+* parametri: contribuente
+* return: double 
+*/
+
+        public static double CalcoloRedditoAnnualeNetto(Contribuente contribuente)
         {
             double ImpostaDovuta;
+            double RedditoAnnualeNetto;
 
             if (contribuente.RedditoAnnuale < 15000)
             {
@@ -440,23 +499,76 @@ namespace ProgettoDelVenerdi___Agenzia_Entrate
             {
                 ImpostaDovuta = 17220 + ((contribuente.RedditoAnnuale - 55000) * 41 / 100);
             }
-            else if (contribuente.RedditoAnnuale > 75000)
+            else // Reddito annuale superiore a 75000
             {
-                ImpostaDovuta = 25420 + ((contribuente.RedditoAnnuale - 75900) * 43 / 100);
+                ImpostaDovuta = 25420 + ((contribuente.RedditoAnnuale - 75000) * 43 / 100);
             }
-            else
-            {
-                Console.WriteLine("Reddito annuale non inserito. Riprova ad inserire");
-                Console.WriteLine("Rieffettua il login per effettuare il calcolo.");
-                Esci(contribuente);
-            }
-            //return RedditoAnnualeNetto = RedditoAnnuale - Imposta;
+
+            RedditoAnnualeNetto = contribuente.RedditoAnnuale - ImpostaDovuta;
+            contribuente.impostaDovuta = ImpostaDovuta;
+            return contribuente.redditoAnnualeNetto = RedditoAnnualeNetto;
         }
 
+
+        /*
+* summary: in quest'ultimo metodo vengono mostrate in console i vari dati ottenuti come input dall'utente.
+* parametri: contribuente
+* return: void 
+*/
+        public static void MostraRisultati(Contribuente contribuente)
+        {
+
+        confermaScelta:
+            try
+            {
+
+                Console.WriteLine("tutti i dati sono stati inseriti correttamente.");
+
+                Console.WriteLine("Vuoi procedere al calcolo dell'imposta da versare?  y/n");
+                string rispostaUtente = Console.ReadLine();
+
+                if (rispostaUtente == "y")
+                {
+                    Console.WriteLine("===============================================");
+                    Console.WriteLine("C A L C O L O  I M P O S T A  D A  V E R S A R E");
+                    Console.WriteLine("===============================================\n");
+                    Console.WriteLine($"Contribuente: {contribuente.Nome.ToUpper()} {contribuente.Cognome.ToUpper()}");
+                    Console.WriteLine($"Nato il: {contribuente.DataDinascitaCompleta}");
+                    Console.WriteLine($"Residente in: {contribuente.ComuneDiResidenza.ToUpper()}");
+                    Console.WriteLine($"Codice Fiscale: {contribuente.CodiceFiscale}\n");
+                    Console.WriteLine($"Reddito Lordo Dichiarato: {contribuente.RedditoAnnuale}");
+                    Console.WriteLine($"IMPOSTA DA VERSARE: {contribuente.impostaDovuta}");
+                    Console.WriteLine($"Reddito Netto: {contribuente.redditoAnnualeNetto}\n");
+
+
+
+
+                }
+                else if (rispostaUtente == "n")
+                {
+                    Esci(contribuente);
+                }
+
+            }
+            catch
+            {
+                Console.WriteLine("Input non valido. Devi inserire y o n per confermare o annullare l'operazione.");
+                goto confermaScelta;
+            }
+
+
+        }
+        /*
+* summary: metodo di default per chiudere il programma.
+* parametri: contribuente
+* return: void 
+*/
         public static void Esci(Contribuente contribuente)
         {
             Console.WriteLine("Arrivederci!");
             contribuente.RegistrazioneInCorso = false;
+            Thread.Sleep(2000);
+            Environment.Exit(0);
         }
     }
 }

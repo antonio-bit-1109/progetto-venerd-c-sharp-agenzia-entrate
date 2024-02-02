@@ -24,6 +24,9 @@
 
         public bool RegistrazioneInCorso { get; set; }
 
+        public double redditoAnnualeNetto { get; set; }
+        public double impostaDovuta { get; set; }
+
 
         // quando ho accumulato tutti i dati in input instanzio la classe e creo un contribuente.
         public Contribuente()
@@ -40,6 +43,8 @@
             this.Giornonascita = "";
             this.Mesenascita = "";
             this.AnnoNascita = "";
+            this.redditoAnnualeNetto = 0;
+            this.impostaDovuta = 0;
         }
     }
 }
